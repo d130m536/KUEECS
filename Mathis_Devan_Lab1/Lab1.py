@@ -3,7 +3,7 @@
 # LAB Session: Fri 8am
 # LAB Assignment: Lab 01
 # Description:
-# This program returns the result of the given binary numbers and
+# This program returns the result of the input binary numbers and
 # bitwise operators.
 #
 # Collaborators/Sources: Me, myself, I, and the Starter.py code
@@ -60,22 +60,56 @@ def get_string_arrays(num_arrays):
 #   For complex code: a brief comment explaining each line
 #   For simple code blocks: a brief explanation of the block
 
-def operator(bin_nums, operators): # runs operator functions on binary nums
-    if operators == None: # if single array, sift for operators and binary nums
-        for i in range(bin_nums):
-            if "0" in bin_nums[i] or "1" in bin_nums[i]: # sift binary nums
-                if bin_nums[i+1] == "AND":
-                    return ADD(bin_nums[i], bin_nums[i+2]) 
-                
-                if bin_nums[i+1] == "OR":
-                    return OR(bin_nums[i], bin_nums[i+2])
-                # TODO: need to not return, make a copy of list with new result and next operator and num
-                #  -> will most likely need to make new function
+def operator(bin_nums, operators = None): # runs operator functions on binary nums
 
-def ADD(num1, num2): # runs bitwise AND operation
+    if operators == None: # if single array, sift for operators and binary nums
+
+        for i in range(2): # loops once, checks length of list --> if 3, return result
+                           # if not, loops again after using result from first loop to use in the second
+
+            # if statements used as match/case function, since I don't have latest python update
+            if bin_nums[1] == "AND": # check for AND operator
+                end_result = AND(bin_nums[0], bin_nums[2]) # perform AND operation
+                
+            if bin_nums[1] == "OR": # check for OR operator
+                end_result = OR(bin_nums[0], bin_nums[2]) # perform OR operation
+            
+            if bin_nums[1] == "XOR": # check for XOR operator
+                end_result = XOR(bin_nums[0], bin_nums[2]) # perform XOR operation
+
+            if len(bin_nums) == 3: # if only three items in list, return result
+                return end_result
+
+            bin_nums = bin_nums[3:] # redefine list with last two items
+
+            bin_nums.insert(0, end_result) # insert operation result at front of list to be used in next operation
+
+    for i in range(2): # loops once, checks operator list length --> if 1, return operation result
+                       # if not, loops again after using result from first operation to use in the second
+
+        # if statements used as match/case function, since I don't have latest python update
+        if operators[0] == "AND": # check for AND operator
+            end_result = AND(bin_nums[0], bin_nums[1]) # perform AND operation
+            
+        if operators[0] == "OR": # check for OR operator
+            end_result = OR(bin_nums[0], bin_nums[1]) # perform OR operation
+        
+        if operators[0] == "XOR": # check for XOR operator
+            end_result = XOR(bin_nums[0], bin_nums[1]) # perform XOR operation
+
+        if len(operators) == 1: # if only one operator in list, return operation result
+            return end_result
+
+        bin_nums = [bin_nums[-1]] # redefine list with last item
+
+        operators = [operators[-1]] # shorten list to final operator
+
+        bin_nums.insert(0, end_result) # insert operation result at front of list to be used in next operation
+
+def AND(num1, num2): # runs bitwise AND operation
     result = ""
-    for i in range(num1):
-        if num1[i] == num2[i]:
+    for i in range(len(num1)):
+        if num1[i] == "1" and num2[i] == "1":
             result += "1"
         else:
             result += "0"
@@ -83,7 +117,7 @@ def ADD(num1, num2): # runs bitwise AND operation
 
 def OR(num1, num2): # runs bitwise OR operation
     result = ""
-    for i in range(num1):
+    for i in range(len(num1)):
         if int(num1[i]) + int(num2[i]) >= 1:
             result += "1"
         else:
@@ -92,7 +126,7 @@ def OR(num1, num2): # runs bitwise OR operation
 
 def XOR(num1, num2): # runs bitwise XOR operation
     result = ""
-    for i in range(num1):
+    for i in range(len(num1)):
         if num1[i] == num2[i]:
             result += "0"
         else:
@@ -103,8 +137,12 @@ def main():
     # Example usage:
     binary_nums = get_string_arrays(1)
     print("Single array:", binary_nums)
+    print(f"Single Array Result: {operator(binary_nums)}\n")
+
     binary_nums, operators = get_string_arrays(2)
     print("Array 1 (binary numbers):", binary_nums)
     print("Array 2 (operators):", operators)
+    print(f"Dual Array Result: {operator(binary_nums, operators)}")
+
 if __name__ == "__main__":
     main()
