@@ -50,24 +50,25 @@ def print_matrix(m):
             print(item, end=" ")
         print()
 
-def product(m1, m2):
-	result = []
-	# take num in first row, then multiply by first num of each row
-	for i in range(len(m1)):
-		op = 0 # OR operation of current row's column, reset for each row
-		for j in range(len(m1[i])):
-			op = op | (m1[i][j] & m2[j][i]) # op ORs column products
-		result.append(op)
+# Your code here
+def product(m1, m2): # produces the product of the two input matrices
+	
+	rows_m = len(m1)	# row count of m1
+	cols_m = len(m1[0])	# col count of m1
+	cols_k = len(m2[0])	# col count of m2
+	
+	result = [[0 for col in range(cols_k)] for row in range(rows_m)] # allocate space in result matrix
+	
+	# loop through the following: 
+	for i in range(rows_m): # rows of m1
+		for j in range(cols_k): # cols of m2
+			for k in range(cols_m): # cols of m2
+				result[i][j] = result[i][j] | (m1[i][k] & m2[k][j]) # add boolean product to result matrix
 	return result
 
 def main():
 	m = get_matrix(True) # matrix 1
 	k = get_matrix(True) # matrix 2
-	print(m)
-	print(k)
-	print("Got: ")
-	print_matrix(m)
-	print_matrix(k)	
-	print(product(m,k)) # currently prints top row of 2x3 3x2 example
+	print_matrix(product(m,k))
 	
 main()
